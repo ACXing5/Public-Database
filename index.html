@@ -26,7 +26,7 @@
   <div id="homeSection">
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
-
+      <div id="dbList"></div>
       <button onclick="showSection('addSection')">Add Database</button>
       <button onclick="showSection('createSection')">Create Database</button>
       <button onclick="showSection('viewSection')">View Database</button>
@@ -38,7 +38,7 @@
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Create Database</a></h1 >
       <input type="text" id="databaseName" placeholder="Enter database name">
-      <button onclick="writeInput()">Submit</button>
+      <button onclick="createDatabase()">Submit</button>
       <button onclick="showSection('homeSection')">Back</button>
     </div>
   </div>
@@ -46,7 +46,7 @@
   <div id="addSection" style="display:none">
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Add Database Entry</a></h1 >
-      <input type="text" id="myInput" placeholder="Type something...">
+      <input type="text" id="myInput" placeholder="Enter a value">
       <button onclick="writeInput()">Submit</button>
       <button onclick="showSection('homeSection')">Back</button>
     </div>
@@ -59,10 +59,11 @@
       <button onclick="showSection('homeSection')">Back</button>
     </div>
   </div>
+
 </body>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+  import { getDatabase, ref, push, onValue, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
   // Your Firebase config
   const firebaseConfig = {
@@ -77,31 +78,65 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const rootRef = ref(db, "/");
 
-  // Attach function to window so the button can call it
-  // window.readInput = function() {
-    const entriesRef = ref(db, "entries");
+  const selectedRefName = "entries";
+  const selectedRef = ref(db, selectedRefName);
 
-    onValue(entriesRef, (snapshot) => {
+  // Updates display of all database options
+  const dbList = document.getElementById("dbList");
+
+  onValue(rootRef, (snapshot) => {
+    dbList.innerHTML = ""; // clear previous content
+    if (snapshot.exists()) {
+      snapshot.forEach((childSnapshot) => {
+        const nodeName = childSnapshot.key;   // top-level node name
+        const p = document.createElement("p");
+        p.textContent = nodeName;
+        p.style.color = "black"; 
+        dbList.appendChild(p);
+      });
+    } else {
+      const p = document.createElement("p");
+      p.textContent = "No databases";
+      p.style.color = "black"; 
+      dbList.appendChild(p);
+    }
+  });
+  
+  async function refExists(refName) {
+    get(refName).then((snapshot) => {
+      if (snapshot.exists()) {
+        return true;
+      } else {
+        return false;
+      }
+    }).catch((error) => { console.error(error); });
+    return false;
+  }
+
+  // Updates display of viewed database
+  if (refExists(selectedRef)) {
+    onValue(selectedRef, (snapshot) => {
       const data = snapshot.val();
       const entriesDiv = document.getElementById("entriesList");
       entriesDiv.innerHTML = ""; // clear previous content
 
       for (const key in data) {
         const entry = data[key];
+        if (entry.dummy) continue;
         const p = document.createElement("p");
         p.textContent = `Value: ${entry.value}, Timestamp: ${new Date(entry.timestamp).toLocaleString()}`;
         p.style.color = "black"; 
         entriesDiv.appendChild(p);
       }
     });
+  }
 
-  // };
-
-  // Attach function to window so the button can call it
+  // Pass in attributes (e.g. value, timestamp) as parameters
   window.writeInput = function() {
     const text = document.getElementById("myInput").value;
-    push(ref(db, "entries"), {
+    push(ref(db, selectedRefName), {
       value: text,
       timestamp: Date.now()
     })
@@ -109,6 +144,26 @@
     .catch((error) => { console.error(error); });
   };
 
+  window.createDatabase = async function() {
+    const text = document.getElementById("databaseName").value;
+    if(text === "") {
+      alert("Please provide a database name!");
+      return;
+    }
+    const currRef = ref(db, text);
+
+    if (await refExists(currRef)) {
+      alert("This database already exists! Please give a different name.");
+    } else {
+      push(currRef, {
+        dummy: "dummy"
+      })
+        .then(() => { alert("Created new database " + text + "!"); })
+        .catch((error) => { console.error(error); });
+    }
+  };
+
+  // Update whenever new section added
   const sections = ["homeSection", "addSection", "viewSection", "createSection"];
 
   window.showSection = function(sectionName) {

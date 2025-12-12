@@ -1,0 +1,18 @@
+================ UserStory 001 - create db ================
+Description:
+- Give the user a way to create a new database
+- Button on home page
+- New page for database creation
+- Input field to name database
+- Button to return to home page
+
+Definition of Done:
+- Can create db
+- Only allow db with a unique name to be created (no overwriting existing databases)
+- Only submit if database name is not empty
+
+Implementation:
+- Since a db (a node) in Firebase cannot be empty and it must have a value,
+an initial dummy entry will be added.
+- View db will ignore the dummy entry --> this is set by having a dummy attribute
+- Constraint: other nodes cannot have dummy as an attribute
