@@ -31,37 +31,34 @@
 		</div>
 	</div>
 </body>
-
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCWZH433ys-IM8IwixQZHO9L48C9MQYrfo",
-    authDomain: "public-database-72a80.firebaseapp.com",
-    projectId: "public-database-72a80",
-    storageBucket: "public-database-72a80.firebasestorage.app",
-    messagingSenderId: "668043866524",
-    appId: "1:668043866524:web:1c1e18e1e0f78d95481859",
-    measurementId: "G-FYB9RMP1MZ"
-  };
+// Your Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCWZH433ys-IM8IwixQZHO9L48C9MQYrfo",
+  authDomain: "public-database-72a80.firebaseapp.com",
+  databaseURL: "https://public-database-72a80-default-rtdb.firebaseio.com/",
+  projectId: "public-database-72a80",
+  storageBucket: "public-database-72a80.appspot.com",
+  messagingSenderId: "668043866524",
+  appId: "1:668043866524:web:1c1e18e1e0f78d95481859",
+};
 
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-  // Make db available to script.js
-  window.db = db;
-  window.dbPush = (text) => {
-    return push(ref(db, "entries"), {
-      value: text,
-      timestamp: Date.now(),
-    });
-  };
+// Attach function to window so the button can call it
+window.readInput = function() {
+  const text = document.getElementById("myInput").value;
+  push(ref(db, "entries"), {
+    value: text,
+    timestamp: Date.now()
+  })
+  .then(() => { alert("Saved to Firebase!"); })
+  .catch((error) => { console.error(error); });
+};
 </script>
 
-<script src="script.js"></script>
-
-<script src="script.js"></script>
 </html>
