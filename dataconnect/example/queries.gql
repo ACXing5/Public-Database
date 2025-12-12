@@ -1,0 +1,31 @@
+mutation CreateMovie @auth(level: USER) {
+  movie_insert(data: {
+    title: "Example Movie",
+    year: 2024,
+    createdAt_expr: "request.time"
+  })
+}
+
+query ListPublicLists @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  lists(where: {public: {eq: true}}) {
+    id
+    name
+    description
+  }
+}
+
+mutation UpdateListItemPosition($listId: UUID!, $movieId: UUID!, $position: Int!) @auth(level: USER) {
+  listItem_update(key: {listId: $listId, movieId: $movieId}, data: {position: $position})
+}
+
+query GetUserReviews($userId: UUID!) @auth(level: USER) {
+  reviews(where: {userId: {eq: $userId}}) {
+    id
+    rating
+    text
+    movie {
+      id
+      title
+    }
+  }
+}

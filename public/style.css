@@ -5,7 +5,7 @@ html {
     display: flex;
     justify-content: center;
     color: #ecf0f1;
-    background-color: rgb(23, 24, 37);
+    background-color: rgb(255, 255, 255);
     font-family: 'Fjalla One', sans-serif;
     animation: fadein 1.5s;
 }
@@ -26,8 +26,8 @@ h1 {
 }
 
 input {
-    background-color: rgba(52, 73, 94, 0.5);
-    color: #ecf0f1;
+    background-color: rgba(206, 231, 255, 0.5);
+    color: #000000;
     outline: none;
     text-align: right;
     border: none;
@@ -61,7 +61,7 @@ table {
 
 button {
     border: none;
-    background-color: white;
+    background-color: rgb(255, 203, 203);
     width: 20vw;
     height: 10vh;
     padding: 0.5rem 0;
@@ -114,7 +114,7 @@ a:hover{
         justify-content: center;
         align-items: center;
         font-size: 2rem;
-        color: rgba(52, 73, 94, 1.0);
+        color: rgb(255, 255, 255);
         background-color: rgba(236, 240, 241, 1.0);
     }
 }

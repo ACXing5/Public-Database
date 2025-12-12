@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1 user-scalable=no, shrink-to-fit=no">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>ACXing5's Database</title>
+	<link rel="stylesheet" href="style.css">
+	<link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-70447982-5"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-70447982-5');
+</script>
+
+	<!-- Common Tags -->
+    <meta content='#171825' name='theme-color' />
+</head>
+
+<body>
+	<div class="container">
+		<h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
+		<div class="calculator">
+			<input type="text" id="myInput" placeholder="Type something...">
+            <button onclick="readInput()">Submit</button>
+		</div>
+	</div>
+</body>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyCWZH433ys-IM8IwixQZHO9L48C9MQYrfo",
+    authDomain: "public-database-72a80.firebaseapp.com",
+    projectId: "public-database-72a80",
+    storageBucket: "public-database-72a80.firebasestorage.app",
+    messagingSenderId: "668043866524",
+    appId: "1:668043866524:web:1c1e18e1e0f78d95481859",
+    measurementId: "G-FYB9RMP1MZ"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+<script src="script.js"></script>
+</html>
