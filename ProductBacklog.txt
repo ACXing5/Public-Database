@@ -1,0 +1,18 @@
+================ UserStory 001 - create db ================
+Description:
+- Give the user a way to create a new database
+- Button on home page
+- New page for database creation
+- Input field to name database
+- Button to return to home page
+
+================ UserStory 002 - select db ================
+Description:
+- Give the user a list of databases to choose from
+- Selection is shown on the home page
+- Selection affects which database you add entries to and which database you are currently viewing
+
+Definition of Done:
+- You can select the database you are using from any page
+- Should display selected database on every page
+- Home page allows user to search for databases and click to select

@@ -27,9 +27,19 @@
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
 
-      <button onclick="showAddDatabase()">Add Database</button>
-      <button onclick="showViewDatabase()">View Database</button>
+      <button onclick="showSection('addSection')">Add Database</button>
+      <button onclick="showSection('createSection')">Create Database</button>
+      <button onclick="showSection('viewSection')">View Database</button>
       
+    </div>
+  </div>
+
+  <div id="createSection" style="display:none">
+    <div class="container">
+      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Create Database</a></h1 >
+      <input type="text" id="databaseName" placeholder="Enter database name">
+      <button onclick="writeInput()">Submit</button>
+      <button onclick="showSection('homeSection')">Back</button>
     </div>
   </div>
 
@@ -38,7 +48,7 @@
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Add Database Entry</a></h1 >
       <input type="text" id="myInput" placeholder="Type something...">
       <button onclick="writeInput()">Submit</button>
-      <button onclick="showHome()">Back</button>
+      <button onclick="showSection('homeSection')">Back</button>
     </div>
   </div>
 
@@ -46,7 +56,7 @@
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">View Database</a></h1 >
       <div id="entriesList"></div>
-      <button onclick="showHome()">Back</button>
+      <button onclick="showSection('homeSection')">Back</button>
     </div>
   </div>
 </body>
@@ -99,22 +109,13 @@
     .catch((error) => { console.error(error); });
   };
 
-  window.showHome = function() {
-    document.getElementById("homeSection").style.display = "block";
-    document.getElementById("addSection").style.display = "none";
-    document.getElementById("viewSection").style.display = "none";
-  };
+  const sections = ["homeSection", "addSection", "viewSection", "createSection"];
 
-  window.showAddDatabase = function() {
-    document.getElementById("homeSection").style.display = "none";
-    document.getElementById("addSection").style.display = "block";
-    document.getElementById("viewSection").style.display = "none";
-  };
-
-  window.showViewDatabase = function() {
-    document.getElementById("homeSection").style.display = "none";
-    document.getElementById("addSection").style.display = "none";
-    document.getElementById("viewSection").style.display = "block";
+  window.showSection = function(sectionName) {
+    for (const section of sections) {
+      document.getElementById(section).style.display = "none";
+    }
+    document.getElementById(sectionName).style.display = "block";
   };
 </script>
 
