@@ -23,42 +23,82 @@
 </head>
 
 <body>
-	<div class="container">
-		<h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
-		<div class="calculator">
-			<input type="text" id="myInput" placeholder="Type something...">
-            <button onclick="readInput()">Submit</button>
-		</div>
-	</div>
+  <div id="homeSection">
+    <div class="container">
+      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
+
+      <button onclick="showAddDatabase()">Add Database</button>
+      <button onclick="showViewDatabase()">View Database</button>
+      
+    </div>
+  </div>
+
+  <div id="addSection" style="display:none">
+    <div class="container">
+      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Add Database Entry</a></h1 >
+      <input type="text" id="myInput" placeholder="Type something...">
+      <button onclick="readInput()">Submit</button>
+      <button onclick="showHome()">Back</button>
+    </div>
+  </div>
+
+  <div id="viewSection" style="display:none">
+    <div class="container">
+      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">View Database</a></h1 >
+      <div id="entriesList">
+        
+
+      </div>
+      <button onclick="showHome()">Back</button>
+    </div>
+  </div>
 </body>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
-// Your Firebase config
-const firebaseConfig = {
-  apiKey: "AIzaSyCWZH433ys-IM8IwixQZHO9L48C9MQYrfo",
-  authDomain: "public-database-72a80.firebaseapp.com",
-  databaseURL: "https://public-database-72a80-default-rtdb.firebaseio.com/",
-  projectId: "public-database-72a80",
-  storageBucket: "public-database-72a80.appspot.com",
-  messagingSenderId: "668043866524",
-  appId: "1:668043866524:web:1c1e18e1e0f78d95481859",
-};
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCWZH433ys-IM8IwixQZHO9L48C9MQYrfo",
+    authDomain: "public-database-72a80.firebaseapp.com",
+    databaseURL: "https://public-database-72a80-default-rtdb.firebaseio.com/",
+    projectId: "public-database-72a80",
+    storageBucket: "public-database-72a80.appspot.com",
+    messagingSenderId: "668043866524",
+    appId: "1:668043866524:web:1c1e18e1e0f78d95481859",
+  };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-// Attach function to window so the button can call it
-window.readInput = function() {
-  const text = document.getElementById("myInput").value;
-  push(ref(db, "entries"), {
-    value: text,
-    timestamp: Date.now()
-  })
-  .then(() => { alert("Saved to Firebase!"); })
-  .catch((error) => { console.error(error); });
-};
+  // Attach function to window so the button can call it
+  window.readInput = function() {
+    const text = document.getElementById("myInput").value;
+    push(ref(db, "entries"), {
+      value: text,
+      timestamp: Date.now()
+    })
+    .then(() => { alert("Saved to Database!"); })
+    .catch((error) => { console.error(error); });
+  };
+
+  window.showHome = function() {
+    document.getElementById("homeSection").style.display = "block";
+    document.getElementById("addSection").style.display = "none";
+    document.getElementById("viewSection").style.display = "none";
+  };
+
+  window.showAddDatabase = function() {
+    document.getElementById("homeSection").style.display = "none";
+    document.getElementById("addSection").style.display = "block";
+    document.getElementById("viewSection").style.display = "none";
+  };
+
+  window.showViewDatabase = function() {
+    document.getElementById("homeSection").style.display = "none";
+    document.getElementById("addSection").style.display = "none";
+    document.getElementById("viewSection").style.display = "block";
+  };
 </script>
 
 </html>
