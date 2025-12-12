@@ -37,7 +37,7 @@
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Add Database Entry</a></h1 >
       <input type="text" id="myInput" placeholder="Type something...">
-      <button onclick="readInput()">Submit</button>
+      <button onclick="writeInput()">Submit</button>
       <button onclick="showHome()">Back</button>
     </div>
   </div>
@@ -45,17 +45,14 @@
   <div id="viewSection" style="display:none">
     <div class="container">
       <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">View Database</a></h1 >
-      <div id="entriesList">
-        
-
-      </div>
+      <div id="entriesList"></div>
       <button onclick="showHome()">Back</button>
     </div>
   </div>
 </body>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
   // Your Firebase config
   const firebaseConfig = {
@@ -72,7 +69,27 @@
   const db = getDatabase(app);
 
   // Attach function to window so the button can call it
-  window.readInput = function() {
+  // window.readInput = function() {
+    const entriesRef = ref(db, "entries");
+
+    onValue(entriesRef, (snapshot) => {
+      const data = snapshot.val();
+      const entriesDiv = document.getElementById("entriesList");
+      entriesDiv.innerHTML = ""; // clear previous content
+
+      for (const key in data) {
+        const entry = data[key];
+        const p = document.createElement("p");
+        p.textContent = `Value: ${entry.value}, Timestamp: ${new Date(entry.timestamp).toLocaleString()}`;
+        p.style.color = "black"; 
+        entriesDiv.appendChild(p);
+      }
+    });
+
+  // };
+
+  // Attach function to window so the button can call it
+  window.writeInput = function() {
     const text = document.getElementById("myInput").value;
     push(ref(db, "entries"), {
       value: text,
