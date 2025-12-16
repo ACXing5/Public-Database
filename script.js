@@ -17,30 +17,52 @@ const db = getDatabase(app);
 const rootRef = ref(db, "/");
 
 // Database selected
-const selectedRefName = "entries";
-const selectedRef = ref(db, selectedRefName);
+let selectedRefName = "entries";
+let selectedRef;
+updateRef();
+const select_db_text = "Select a database...";
 
 
-// Updates display of all database options
-const dbList = document.getElementById("dbList");
+window.getDatabaseList = function () {
+    // Updates display of all database options
+    const dbList = document.getElementById("database-select");
+    const options = []
 
-onValue(rootRef, (snapshot) => {
-    dbList.innerHTML = ""; // clear previous content
-    if (snapshot.exists()) {
-        snapshot.forEach((childSnapshot) => {
-            const nodeName = childSnapshot.key;   // top-level node name
-            const p = document.createElement("p");
-            p.textContent = nodeName;
-            p.style.color = "black";
-            dbList.appendChild(p);
-        });
-    } else {
-        const p = document.createElement("p");
-        p.textContent = "No databases";
-        p.style.color = "black";
-        dbList.appendChild(p);
-    }
-});
+    onValue(rootRef, (snapshot) => {
+        dbList.innerHTML = ""; // clear previous content
+        if (snapshot.exists()) {
+            snapshot.forEach((childSnapshot) => {
+                const nodeName = childSnapshot.key;   // top-level node name
+                options.push(nodeName);
+            });
+        } else {
+            options.push("No databases");
+        }
+
+        options.sort((a, b) => a.localeCompare(b));
+        options.unshift(select_db_text);    // Default text for select drop-down
+        for (const text of options) {
+            const option = document.createElement("option");
+            option.value = text;
+            option.textContent = text;
+            dbList.appendChild(option);
+        }
+    });
+
+    dbList.addEventListener("change", (event) => {
+        const selectedValue = event.target.value;
+        console.log("Selected:", selectedValue);
+        if (selectedValue != select_db_text) {
+            selectedRefName = selectedValue;
+            updateRef();
+        }
+        
+    });
+}
+
+function updateRef() {
+    selectedRef = ref(db, selectedRefName);
+}
 
 async function refExists(refName) {
     get(refName).then((snapshot) => {
@@ -53,22 +75,24 @@ async function refExists(refName) {
     return false;
 }
 
-// Updates display of viewed database
-if (refExists(selectedRef)) {
-    onValue(selectedRef, (snapshot) => {
-        const data = snapshot.val();
-        const entriesDiv = document.getElementById("entriesList");
-        entriesDiv.innerHTML = ""; // clear previous content
+window.viewDatabase = function () {
+    // Updates display of viewed database
+    if (refExists(selectedRef)) {
+        onValue(selectedRef, (snapshot) => {
+            const data = snapshot.val();
+            const entriesDiv = document.getElementById("entriesList");
+            entriesDiv.innerHTML = ""; // clear previous content
 
-        for (const key in data) {
-            const entry = data[key];
-            if (entry.dummy) continue;
-            const p = document.createElement("p");
-            p.textContent = `Value: ${entry.value}, Timestamp: ${new Date(entry.timestamp).toLocaleString()}`;
-            p.style.color = "black";
-            entriesDiv.appendChild(p);
-        }
-    });
+            for (const key in data) {
+                const entry = data[key];
+                if (entry.dummy) continue;
+                const p = document.createElement("p");
+                p.textContent = `Value: ${entry.value}, Timestamp: ${new Date(entry.timestamp).toLocaleString()}`;
+                p.style.color = "black";
+                entriesDiv.appendChild(p);
+            }
+        });
+    }
 }
 
 // Pass in attributes (e.g. value, timestamp) as parameters
@@ -109,4 +133,9 @@ window.showSection = function (sectionName) {
         document.getElementById(section).style.display = "none";
     }
     document.getElementById(sectionName).style.display = "block";
+    if (sectionName == "homeSection") {
+        getDatabaseList();
+    } else if (sectionName == "viewSection") {
+        viewDatabase();
+    }
 };

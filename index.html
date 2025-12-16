@@ -22,44 +22,49 @@
     <meta content='#171825' name='theme-color' />
 </head>
 
-<body>
+<body onload="showSection('homeSection')">
   <script src="script.js" type="module"></script>
 
-  <div id="homeSection">
-    <div class="container">
-      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
-      <div id="dbList"></div>
-      <button onclick="showSection('addSection')">Add Database</button>
-      <button onclick="showSection('createSection')">Create Database</button>
-      <button onclick="showSection('viewSection')">View Database</button>
-      
-    </div>
-  </div>
+  <div class="default-style">
+    <div id="homeSection">
+      <div class="container">
+        <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
+        <label for="database-select" style="color:#000000">Choose a database:</label>
+        <select name="database-select" id="database-select"></select>
 
-  <div id="createSection" style="display:none">
-    <div class="container">
-      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Create Database</a></h1 >
-      <input type="text" id="databaseName" placeholder="Enter database name">
-      <button onclick="createDatabase()">Submit</button>
-      <button onclick="showSection('homeSection')">Back</button>
+        <button onclick="showSection('addSection')">Add Database</button>
+        <button onclick="showSection('createSection')">Create Database</button>
+        <button onclick="showSection('viewSection')">View Database</button>
+        
+      </div>
     </div>
-  </div>
 
-  <div id="addSection" style="display:none">
-    <div class="container">
-      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Add Database Entry</a></h1 >
-      <input type="text" id="myInput" placeholder="Enter a value">
-      <button onclick="writeInput()">Submit</button>
-      <button onclick="showSection('homeSection')">Back</button>
+    <div id="createSection" style="display:none">
+      <div class="container">
+        <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Create Database</a></h1 >
+        <input type="text" id="databaseName" placeholder="Enter database name">
+        <button onclick="createDatabase()">Submit</button>
+        <button onclick="showSection('homeSection')">Back</button>
+      </div>
     </div>
-  </div>
 
-  <div id="viewSection" style="display:none">
-    <div class="container">
-      <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">View Database</a></h1 >
-      <div id="entriesList"></div>
-      <button onclick="showSection('homeSection')">Back</button>
+    <div id="addSection" style="display:none">
+      <div class="container">
+        <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Add Database Entry</a></h1 >
+        <input type="text" id="myInput" placeholder="Enter a value">
+        <button onclick="writeInput()">Submit</button>
+        <button onclick="showSection('homeSection')">Back</button>
+      </div>
     </div>
+
+    <div id="viewSection" style="display:none">
+      <div class="container">
+        <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">View Database</a></h1 >
+        <div id="entriesList"></div>
+        <button onclick="showSection('homeSection')">Back</button>
+      </div>
+    </div>
+
   </div>
 
 </body>
