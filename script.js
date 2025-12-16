@@ -16,8 +16,10 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const rootRef = ref(db, "/");
 
+// Database selected
 const selectedRefName = "entries";
 const selectedRef = ref(db, selectedRefName);
+
 
 // Updates display of all database options
 const dbList = document.getElementById("dbList");
