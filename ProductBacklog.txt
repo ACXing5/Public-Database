@@ -8,3 +8,9 @@ Definition of Done:
 - You can select the database you are using from any page
 - Should display selected database on every page
 - Home page allows user to search for databases and click to select
+
+================ UserStory 002 - UI upgrade ================
+Description: TODO
+- Move buttons around
+- Compile database lists better
+List improvements as I go
