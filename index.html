@@ -22,15 +22,14 @@
     <meta content='#171825' name='theme-color' />
 </head>
 
-<body onload="showSection('homeSection')">
+<!-- <body onload="showSection('homeSection')"> -->
+  <body onload="getDatabaseList()">
   <script src="script.js" type="module"></script>
 
   <div class="default-style">
     <div id="homeSection">
       <div class="container">
         <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
-        <label for="database-select" style="color:#000000">Choose a database:</label>
-        <select name="database-select" id="database-select"></select>
 
         <button onclick="showSection('addSection')">Add Database</button>
         <button onclick="showSection('createSection')">Create Database</button>
@@ -66,6 +65,9 @@
     </div>
 
   </div>
+
+  <label for="database-select" style="color:#000000">Choose a database:</label>
+  <select name="database-select" id="database-select"></select>
 
 </body>
 

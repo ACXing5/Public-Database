@@ -17,18 +17,17 @@ const db = getDatabase(app);
 const rootRef = ref(db, "/");
 
 // Database selected
-let selectedRefName = "entries";
+let selectedRefName = "";
 let selectedRef;
-updateRef();
 const select_db_text = "Select a database...";
 
 
 window.getDatabaseList = function () {
     // Updates display of all database options
     const dbList = document.getElementById("database-select");
-    const options = []
 
     onValue(rootRef, (snapshot) => {
+        const options = []
         dbList.innerHTML = ""; // clear previous content
         if (snapshot.exists()) {
             snapshot.forEach((childSnapshot) => {
@@ -51,17 +50,23 @@ window.getDatabaseList = function () {
 
     dbList.addEventListener("change", (event) => {
         const selectedValue = event.target.value;
-        console.log("Selected:", selectedValue);
         if (selectedValue != select_db_text) {
+            console.log("Selected:", selectedValue);
             selectedRefName = selectedValue;
             updateRef();
+            viewDatabase(); // Refresh database element list if on that section.
         }
         
     });
 }
 
 function updateRef() {
-    selectedRef = ref(db, selectedRefName);
+    if(selectedRefName == "") return false;
+    try {
+        selectedRef = ref(db, selectedRefName);
+    } catch (err) {
+        console.log(err);
+    }
 }
 
 async function refExists(refName) {
@@ -77,7 +82,7 @@ async function refExists(refName) {
 
 window.viewDatabase = function () {
     // Updates display of viewed database
-    if (refExists(selectedRef)) {
+    if (selectedRef && refExists(selectedRef)) {
         onValue(selectedRef, (snapshot) => {
             const data = snapshot.val();
             const entriesDiv = document.getElementById("entriesList");
@@ -97,13 +102,18 @@ window.viewDatabase = function () {
 
 // Pass in attributes (e.g. value, timestamp) as parameters
 window.writeInput = function () {
-    const text = document.getElementById("myInput").value;
-    push(ref(db, selectedRefName), {
-        value: text,
-        timestamp: Date.now()
-    })
-        .then(() => { alert("Saved to Database!"); })
-        .catch((error) => { console.error(error); });
+    if (selectedRef) {
+        const text = document.getElementById("myInput").value;
+    
+        push(ref(db, selectedRefName), {
+            value: text,
+            timestamp: Date.now()
+        })
+            .then(() => { alert("Saved to Database!"); })
+            .catch((error) => { console.error(error); });
+    } else {
+        alert("Please select a database!");
+    }
 };
 
 window.createDatabase = async function () {
@@ -133,9 +143,7 @@ window.showSection = function (sectionName) {
         document.getElementById(section).style.display = "none";
     }
     document.getElementById(sectionName).style.display = "block";
-    if (sectionName == "homeSection") {
-        getDatabaseList();
-    } else if (sectionName == "viewSection") {
+    if (sectionName == "viewSection") {
         viewDatabase();
     }
 };
