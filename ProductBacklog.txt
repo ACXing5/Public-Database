@@ -14,3 +14,6 @@ Description: TODO
 - Move buttons around
 - Compile database lists better
 List improvements as I go
+
+================ UserStory 004 - reorganize code ================
+Move stuff out of index.html
