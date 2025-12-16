@@ -16,4 +16,5 @@ Description: TODO
 List improvements as I go
 
 ================ UserStory 004 - reorganize code ================
-Move stuff out of index.html
+Move js code out of index.html   --- DONE
+TODO
