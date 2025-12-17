@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getDatabase, ref, push, onValue, get, remove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+import { getDatabase, ref, push, onValue, get, remove, update } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
 console.log("script.js loaded");
 
@@ -138,36 +138,13 @@ window.addCategory = function () {
         console.log(category);
         window.categories.push(category);
         // alert("Category " + category + " added!");
-        renderCategories();
+        renderCategories(window.categories, "categoryContainer");
     } else {
         alert("Category name was not given!");
     }
     input.value = "";
     input.placeholder = categoryPlaceholder;
 };
-
-function renderCategories() {
-    const container = document.getElementById("categoryContainer");
-    container.innerHTML = "";
-
-    for (const category of window.categories) {
-        const pill = document.createElement("div");
-        pill.className = "category-pill";
-        pill.textContent = category;
-
-        const removeBtn = document.createElement("button");
-        removeBtn.textContent = "✕";
-        removeBtn.onclick = () => removeCategory(category);
-
-        pill.appendChild(removeBtn);
-        container.appendChild(pill);
-    }
-}
-
-function removeCategory(category) {
-    window.categories = window.categories.filter(c => c !== category);
-    renderCategories();
-}
 
 window.createDatabase = async function () {
     const text = document.getElementById("databaseName").value;
@@ -203,6 +180,39 @@ window.deleteDatabase = function () {
         .catch(err => {
             console.error("Delete failed:", err);
         });
+};
+
+window.modifyCategories = function (categories) {
+    const updates = {};
+
+    for (const category of categories) {
+        updates[`${selectedRefName}/${category}`] = {};
+    }
+
+    update(ref(db), updates);
+};
+
+function renderCategories(categories, containerName) {
+    const container = document.getElementById(containerName);
+    container.innerHTML = "";
+
+    for (const category of categories) {
+        const pill = document.createElement("div");
+        pill.className = "category-pill";
+        pill.textContent = category;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "✕";
+        removeBtn.onclick = () => removeCategory(categories, containerName, category);
+
+        pill.appendChild(removeBtn);
+        container.appendChild(pill);
+    }
+}
+
+function removeCategory(categories, containerName, category) {
+    categories = categories.filter(c => c !== category);
+    renderCategories(categories, containerName);
 }
 
 // Update whenever new section added
