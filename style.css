@@ -54,6 +54,11 @@ input {
     transform: translate(-50%, -50%);
 }
 
+input {
+    font-size: 1.5rem;
+}
+
+
 .calculator {
     padding: 0.25rem;
     display: inline-block;

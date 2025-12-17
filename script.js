@@ -53,6 +53,8 @@ window.getDatabaseList = function () {
             option.textContent = text;
             dbList.appendChild(option);
         }
+
+        if (selectedRefName != "") dbList.value = selectedRefName;
     });
 
     if (!dbChangeListenerAttached) {
@@ -128,45 +130,74 @@ window.writeInput = function () {
 
 window.categories = [];
 let categoryPlaceholder = "Enter category name";
+let categoryDefaultValuePlaceholder = "Enter a default value for your category name";
+let createDatabasePlaceholder = "Enter database name";
 
-window.addCategory = function () {
-    const input = document.getElementById("categoryName");
-    const category = input.value.trim();
+window.addCategory = function (section) {
+    let categorySection, defaultSection;
+    if(section == "createSection") {
+        categorySection = "categoryNameCreate";
+        defaultSection = "categoryDefaultValueCreate";
+    } else if (section == "modifySection") {
+        categorySection = "categoryNameModify";
+        defaultSection = "categoryDefaultValueModify";
+    } else {
+        return;
+    }
+
+    const input = document.getElementById(categorySection);
+    const category = input.value.trim().replace(":", "");
+    const defaults = document.getElementById(defaultSection);
+    const defaultValue = defaults.value.trim().replace(":", "");
     if (window.categories.some(c => c.toLowerCase() === category.toLowerCase())) {
        alert("Category already added! Please supply a new one.");
     } else if (category != "") {
-        console.log(category);
-        window.categories.push(category);
-        // alert("Category " + category + " added!");
-        renderCategories(window.categories, "categoryContainer");
+        console.log(category + ": " + defaultValue);
+        if(defaultValue == "") {
+            window.categories.push(category);
+        } else {
+            window.categories.push(category + ":" + defaultValue);
+        }
+        
+        renderCategories(window.categories, section);
     } else {
         alert("Category name was not given!");
     }
     input.value = "";
     input.placeholder = categoryPlaceholder;
+    defaults.value = "";
+    defaults.placeholder = categoryDefaultValuePlaceholder;
+
 };
 
 window.createDatabase = async function () {
-    const text = document.getElementById("databaseName").value;
+    const input = document.getElementById("databaseName")
+    const text = input.value;
     if (text === "") {
         alert("Please provide a database name!");
-        return;
-    }
-    const currRef = ref(db, text);
-
-    if (await refExists(currRef)) {
-        alert("This database already exists! Please give a different name.");
+        input.value = "";
+        input.placeholder = createDatabasePlaceholder;
     } else {
-        const data = {}
-        for (const category of categories) {
-            data[category] = "temp" + category;
-        }
-        if (categories == []) data[dummy] = "dummy";
+        const currRef = ref(db, text);
 
-        push(currRef, data)
-            .then(() => { alert("Created new database " + text + "!"); })
-            .catch((error) => { console.error(error); });
+        if (await refExists(currRef)) {
+            alert("This database already exists! Please give a different name.");
+        } else {
+            const data = {}
+            for (const c of window.categories) {
+                const [category, defaultValue] = c.split(":");
+                if (defaultValue) data[category] = defaultValue;
+                else data[category] = "temp" + category;
+            }
+            if (categories == []) data[dummy] = "dummy";
+
+            push(currRef, data)
+                .then(() => { alert("Created new database " + text + "!"); })
+                .catch((error) => { console.error(error); });
+        }
     }
+    input.value = "";
+    input.placeholder = createDatabasePlaceholder;
 };
 
 window.deleteDatabase = function () {
@@ -182,17 +213,41 @@ window.deleteDatabase = function () {
         });
 };
 
-window.modifyCategories = function (categories) {
+window.modifyCategories = async function () {
+    const snapshot = await get(selectedRef);
+    if (!snapshot.exists()) return;
+
     const updates = {};
 
-    for (const category of categories) {
-        updates[`${selectedRefName}/${category}`] = {};
-    }
+    snapshot.forEach(nodeSnap => {
+        const nodeKey = nodeSnap.key;
+        const nodeData = nodeSnap.val() || {};
 
-    update(ref(db), updates);
+        for (const c of window.categories) {
+            const [category, defaultValue] = c.split(":");
+            if (!(category in nodeData)) {
+                if (defaultValue) updates[`${selectedRefName}/${nodeKey}/${category}`] = defaultValue;
+                else updates[`${selectedRefName}/${nodeKey}/${category}`] = "temp" + category;
+            }
+        }
+    });
+
+    if (Object.keys(updates).length > 0) {
+        await update(ref(db), updates);
+        alert("Categories successfully added!");
+    }
 };
 
-function renderCategories(categories, containerName) {
+function renderCategories(categories, section) {
+    let containerName;
+    if(section == "createSection") {
+        containerName = "categoryContainerCreate";
+    } else if (section == "modifySection") {
+        containerName = "categoryContainerModify";
+    } else {
+        return;
+    }
+
     const container = document.getElementById(containerName);
     container.innerHTML = "";
 
@@ -203,16 +258,20 @@ function renderCategories(categories, containerName) {
 
         const removeBtn = document.createElement("button");
         removeBtn.textContent = "✕";
-        removeBtn.onclick = () => removeCategory(categories, containerName, category);
+        removeBtn.onclick = () => removeCategory(categories, section, category);
 
         pill.appendChild(removeBtn);
         container.appendChild(pill);
     }
 }
 
-function removeCategory(categories, containerName, category) {
-    categories = categories.filter(c => c !== category);
-    renderCategories(categories, containerName);
+function removeCategory(categories, section, category) {
+    for (const c of categories) {
+        if (c == category) {
+            categories.pop(c);
+        }
+    }
+    renderCategories(categories, section);
 }
 
 // Update whenever new section added
@@ -225,7 +284,11 @@ window.showSection = function (sectionName) {
     document.getElementById(sectionName).style.display = "block";
     if (sectionName == "viewSection") {
         viewDatabase();
-    } else if (sectionName == "createSection") {
-        window.categories = [];
     }
+
+    window.categories = [];
+    let container = document.getElementById("categoryContainerCreate");
+    container.innerHTML = "";
+    container = document.getElementById("categoryContainerModify");
+    container.innerHTML = "";
 };
