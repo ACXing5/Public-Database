@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getDatabase, ref, push, onValue, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
+import { getDatabase, ref, push, onValue, get, remove } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
 console.log("script.js loaded");
 
@@ -169,8 +169,6 @@ function removeCategory(category) {
     renderCategories();
 }
 
-
-
 window.createDatabase = async function () {
     const text = document.getElementById("databaseName").value;
     if (text === "") {
@@ -194,10 +192,21 @@ window.createDatabase = async function () {
     }
 };
 
+window.deleteDatabase = function () {
+    if (!selectedRefName) return;
 
+    const dbRef = ref(db, selectedRefName);
+    remove(dbRef)
+        .then(() => {
+            console.log("Database deleted:", selectedRefName);
+        })
+        .catch(err => {
+            console.error("Delete failed:", err);
+        });
+}
 
 // Update whenever new section added
-const sections = ["homeSection", "addSection", "viewSection", "createSection"];
+const sections = ["homeSection", "addSection", "viewSection", "createSection", "modifySection"];
 
 window.showSection = function (sectionName) {
     for (const section of sections) {
