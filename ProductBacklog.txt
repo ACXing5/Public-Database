@@ -21,3 +21,9 @@ List improvements as I go
 ================ UserStory 004 - reorganize code ================
 Move js code out of index.html   --- DONE
 TODO
+
+================ UserStory 005 - Customize database categories ================
+
+================ UserStory 005.1 - Allow images as a value ================
+
+================ UserStory 006 - Display items better in view database ================
