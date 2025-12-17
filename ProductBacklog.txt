@@ -7,6 +7,10 @@ databases in the select drop down)
 On the same section as Delete
 Can add new categories, or remove categories of all items in the database
 
+================ UserStory 010 - Add to database: Categories automatically follow the template of your database ================
+It will tell you what types of inputs to add based on the categories specified for a database.
+CONSTRAINT: The categories of a database are constant (all elements share the same categories). They can be modified, 
+but the whole database must be modified.
 
 
 ================ UserStory 005.1 - Allow images as a value ================
