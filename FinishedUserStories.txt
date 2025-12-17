@@ -16,3 +16,21 @@ Implementation:
 an initial dummy entry will be added.
 - View db will ignore the dummy entry --> this is set by having a dummy attribute
 - Constraint: other nodes cannot have dummy as an attribute
+
+================ UserStory 002 - select db ================     DONE except IMPLEMENT LATER
+Description:
+- Give the user a list of databases to choose from
+- Selection is shown on the home page
+- Selection affects which database you add entries to and which database you are currently viewing
+
+Definition of Done:
+- You can select the database you are using from any page
+- Should display selected database on every page
+
+================ UserStory 005 - Customize database categories ================
+Allow for category creation in the create db section
+Categories pop up onto the screen as tags that can be removed by clicking the x's on
+their buttons.
+
+================ UserStory 008 - Delete database ================
+Be able to drop a database

@@ -1,16 +1,27 @@
+================ UserStory 007 - Privacy Attribute to db's ================
+Instead of dummy, have privacy on ALL databases
+Restricts which databases you can select (private db's won't be shown in the list of 
+databases in the select drop down)
+
+================ UserStory 009 - Modify database ================
+On the same section as Delete
+Can add new categories, or remove categories of all items in the database
+
+
+
+================ UserStory 005.1 - Allow images as a value ================
+See if firebase supports adding files and see how much is allowed.
+
+==================================================================================
+================================ IMPLEMENT LATER: ================================
+
 ================ UserStory 002 - select db ================     DONE except IMPLEMENT LATER
-Description:
-- Give the user a list of databases to choose from
-- Selection is shown on the home page
-- Selection affects which database you add entries to and which database you are currently viewing
-
-Definition of Done:
-- You can select the database you are using from any page
-- Should display selected database on every page
-
-
 IMPLEMENT LATER
 - Home page allows user to search for databases and click to select
+
+================ UserStory 004 - reorganize code ================
+Move js code out of index.html   --- DONE
+TODO
 
 ================ UserStory 003 - UI upgrade ================
 Description: TODO
@@ -18,29 +29,5 @@ Description: TODO
 - Compile database lists better
 List improvements as I go
 
-================ UserStory 004 - reorganize code ================
-Move js code out of index.html   --- DONE
-TODO
-
-================ UserStory 005 - Customize database categories ================
-Allow for category creation in the create db section
-Categories pop up onto the screen as tags that can be removed by clicking the x's on
-their buttons.
-
-================ UserStory 005.1 - Allow images as a value ================
-See if firebase supports adding files and see how much is allowed.
-
 ================ UserStory 006 - Display items better in view database ================
 Have some format for how entries are displayed
-
-================ UserStory 007 - Privacy Attribute to db's ================
-Instead of dummy, have privacy on ALL databases
-Restricts which databases you can select (private db's won't be shown in the list of 
-databases in the select drop down)
-
-================ UserStory 008 - Delete database ================
-Be able to drop a database
-
-================ UserStory 009 - Modify database ================
-On the same section as Delete
-Can add new categories, or remove categories of all items in the database
