@@ -24,14 +24,14 @@
 
 <!-- <body onload="showSection('homeSection')"> -->
   <body onload="getDatabaseList()">
-  <script src="script.js" type="module"></script>
+  <script type="module" src="./script.js"></script>
 
   <div class="default-style">
     <div id="homeSection">
       <div class="container">
         <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">ACXing5's Database</a></h1 >
 
-        <button onclick="showSection('addSection')">Add Database</button>
+        <button onclick="showSection('addSection')">Add to Database</button>
         <button onclick="showSection('createSection')">Create Database</button>
         <button onclick="showSection('viewSection')">View Database</button>
         
@@ -42,6 +42,11 @@
       <div class="container">
         <h1><a style="text-decoration: none; color: #000000; margin-left: 0.25rem;" href="" onclick="location.reload();">Create Database</a></h1 >
         <input type="text" id="databaseName" placeholder="Enter database name">
+        <input type="text" id="categoryName" placeholder="Enter category name">
+        <button onclick="addCategory()">Add Category</button>
+
+        <div id="categoryContainer" class="category-container"></div>
+
         <button onclick="createDatabase()">Submit</button>
         <button onclick="showSection('homeSection')">Back</button>
       </div>

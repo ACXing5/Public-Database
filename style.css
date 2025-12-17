@@ -122,3 +122,32 @@ a:hover{
         background-color: rgba(236, 240, 241, 1.0);
     }
 }
+
+.category-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.category-pill {
+    display: inline-flex;
+    align-items: center;
+    background-color: #e5e5e5;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.85rem;
+}
+
+.category-pill button {
+    background: none;
+    border: none;
+    margin-left: 0.4rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.category-pill button:hover {
+    color: red;
+}

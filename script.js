@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
 import { getDatabase, ref, push, onValue, get } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-database.js";
 
+console.log("script.js loaded");
+
 // Your Firebase config
 const firebaseConfig = {
     apiKey: "AIzaSyCWZH433ys-IM8IwixQZHO9L48C9MQYrfo",
@@ -20,11 +22,16 @@ const rootRef = ref(db, "/");
 let selectedRefName = "";
 let selectedRef;
 const select_db_text = "Select a database...";
-
+let dbChangeListenerAttached = false;
 
 window.getDatabaseList = function () {
     // Updates display of all database options
     const dbList = document.getElementById("database-select");
+
+    if (!dbList) {
+        console.log("DB List Empty");
+        return;
+    }
 
     onValue(rootRef, (snapshot) => {
         const options = []
@@ -48,16 +55,19 @@ window.getDatabaseList = function () {
         }
     });
 
-    dbList.addEventListener("change", (event) => {
-        const selectedValue = event.target.value;
-        if (selectedValue != select_db_text) {
-            console.log("Selected:", selectedValue);
-            selectedRefName = selectedValue;
-            updateRef();
-            viewDatabase(); // Refresh database element list if on that section.
-        }
-        
-    });
+    if (!dbChangeListenerAttached) {
+        dbList.addEventListener("change", (event) => {
+            const selectedValue = event.target.value;
+            if (selectedValue != select_db_text) {
+                console.log("Selected:", selectedValue);
+                selectedRefName = selectedValue;
+                updateRef();
+                viewDatabase(); // Refresh database element list if on that section.
+            }
+            
+        });
+        dbChangeListenerAttached = true;
+    }
 }
 
 function updateRef() {
@@ -116,6 +126,51 @@ window.writeInput = function () {
     }
 };
 
+window.categories = [];
+let categoryPlaceholder = "Enter category name";
+
+window.addCategory = function () {
+    const input = document.getElementById("categoryName");
+    const category = input.value.trim();
+    if (window.categories.some(c => c.toLowerCase() === category.toLowerCase())) {
+       alert("Category already added! Please supply a new one.");
+    } else if (category != "") {
+        console.log(category);
+        window.categories.push(category);
+        // alert("Category " + category + " added!");
+        renderCategories();
+    } else {
+        alert("Category name was not given!");
+    }
+    input.value = "";
+    input.placeholder = categoryPlaceholder;
+};
+
+function renderCategories() {
+    const container = document.getElementById("categoryContainer");
+    container.innerHTML = "";
+
+    for (const category of window.categories) {
+        const pill = document.createElement("div");
+        pill.className = "category-pill";
+        pill.textContent = category;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "✕";
+        removeBtn.onclick = () => removeCategory(category);
+
+        pill.appendChild(removeBtn);
+        container.appendChild(pill);
+    }
+}
+
+function removeCategory(category) {
+    window.categories = window.categories.filter(c => c !== category);
+    renderCategories();
+}
+
+
+
 window.createDatabase = async function () {
     const text = document.getElementById("databaseName").value;
     if (text === "") {
@@ -127,13 +182,19 @@ window.createDatabase = async function () {
     if (await refExists(currRef)) {
         alert("This database already exists! Please give a different name.");
     } else {
-        push(currRef, {
-            dummy: "dummy"
-        })
+        const data = {}
+        for (const category of categories) {
+            data[category] = "temp" + category;
+        }
+        if (categories == []) data[dummy] = "dummy";
+
+        push(currRef, data)
             .then(() => { alert("Created new database " + text + "!"); })
             .catch((error) => { console.error(error); });
     }
 };
+
+
 
 // Update whenever new section added
 const sections = ["homeSection", "addSection", "viewSection", "createSection"];
@@ -145,5 +206,7 @@ window.showSection = function (sectionName) {
     document.getElementById(sectionName).style.display = "block";
     if (sectionName == "viewSection") {
         viewDatabase();
+    } else if (sectionName == "createSection") {
+        window.categories = [];
     }
 };
