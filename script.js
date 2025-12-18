@@ -127,17 +127,50 @@ window.viewDatabase = function () {
     }
 }
 
+window.buildCategoryInputs = function () {
+    const container = document.getElementById("categoryInputs");
+    container.innerHTML = "";
+
+    if (!selectedRefName) return;
+
+    // Get first entry of selected database
+    onValue(ref(db, selectedRefName), (snapshot) => {
+        let firstEntry = null;
+
+        snapshot.forEach((entrySnapshot) => {
+            firstEntry = entrySnapshot.val();
+            return true; // ⛔ only first entry
+        });
+
+        if (!firstEntry) return;
+
+        for (const key in firstEntry) {
+            if (key === "PrivacyStatus") continue;
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = key;
+            input.dataset.category = key;
+
+            container.appendChild(input);
+        }
+    }, { onlyOnce: true });
+};
+
 // Pass in attributes (e.g. value, timestamp) as parameters
 window.writeInput = function () {
     if (selectedRef) {
-        const text = document.getElementById("myInput").value;
-    
-        push(ref(db, selectedRefName), {
-            value: text,
-            timestamp: Date.now()
-        })
-            .then(() => { alert("Saved to Database!"); })
-            .catch((error) => { console.error(error); });
+        const inputs = document.querySelectorAll("#categoryInputs input");
+        const data = {};
+
+        inputs.forEach(input => {
+            data[input.dataset.category] = input.value;
+        });
+
+        data.timestamp = Date.now();
+
+        push(ref(db, selectedRefName), data);
+        alert("Saved to Database!");
     } else {
         alert("Please select a database!");
     }
@@ -302,6 +335,8 @@ window.showSection = function (sectionName) {
     document.getElementById(sectionName).style.display = "block";
     if (sectionName == "viewSection") {
         viewDatabase();
+    } else if (sectionName == "addSection") {
+        buildCategoryInputs();
     }
 
     window.categories = [];

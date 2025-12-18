@@ -14,28 +14,26 @@ Allow input to be entered in some structured form that will quickly add multiple
 database.
 Ex: {(Name: Pikachu, Type1: Electric, Type2: None), (Name: Bulbasaur, Type1: Grass, Type2: Poison)}
 
-
-=========================================================================================
-================ UserStory 005.1 - Allow images as a value ==============================
-See if firebase supports adding files and see how much is allowed.
-
+==========================================================================================================
+================ UserStory 006 - Display items better in view database ===================================
+Have some format for how entries are displayed
 
 ================================================================================================================
 ================================ IMPLEMENT LATER: ==============================================================
-
-================ UserStory 002 - select db ================     DONE except IMPLEMENT LATER
-IMPLEMENT LATER
-- Home page allows user to search for databases and click to select
-
-================ UserStory 004 - reorganize code ================
-Move js code out of index.html   --- DONE
-TODO
-
 ================ UserStory 003 - UI upgrade ================
 Description: TODO
 - Move buttons around
 - Compile database lists better
 List improvements as I go
 
-================ UserStory 006 - Display items better in view database ================
-Have some format for how entries are displayed
+================ UserStory 002 - select db ================     DONE except IMPLEMENT LATER
+IMPLEMENT LATER
+- Home page allows user to search for databases and click to select
+
+=========================================================================================
+================ UserStory 005.1 - Allow images as a value ==============================
+See if firebase supports adding files and see how much is allowed.
+
+================ UserStory 004 - reorganize code ================
+Move js code out of index.html   --- DONE
+TODO
