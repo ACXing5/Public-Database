@@ -1,17 +1,5 @@
-==================================================================================================
-================ UserStory 007 - Privacy Attribute to db's =======================================
-Instead of dummy, have privacy on ALL databases
-Restricts which databases you can select (private db's won't be shown in the list of 
-databases in the select drop down)
 
-
-==================================================================================================
-================ UserStory 007.1 - Design Each Database ==========================================
-Dummy entry:
-- PrivacyStatus: (private/public)
-- Categories (same as the rest of the database)
-
-This entry will be the template for new entries in the same database.
+PrivacyStatus cannot be removed via Modify
 
 
 ================================================================================================================================

@@ -36,14 +36,29 @@ window.getDatabaseList = function () {
     onValue(rootRef, (snapshot) => {
         const options = []
         dbList.innerHTML = ""; // clear previous content
+
         if (snapshot.exists()) {
             snapshot.forEach((childSnapshot) => {
-                const nodeName = childSnapshot.key;   // top-level node name
-                options.push(nodeName);
+                let isPrivate = false;
+                const dbName = childSnapshot.key;
+
+                // Get ONLY the first entry of this database
+                childSnapshot.forEach((entrySnapshot) => {
+                    const entry = entrySnapshot.val();
+
+                    if (entry?.PrivacyStatus === "private") {
+                        isPrivate = true;
+                    }
+
+                    return true;
+                });
+
+                if (!isPrivate) {
+                    options.push(dbName);
+                }
             });
-        } else {
-            options.push("No databases");
         }
+        if (options.length == 0) options.push("No databases");
 
         options.sort((a, b) => a.localeCompare(b));
         options.unshift(select_db_text);    // Default text for select drop-down
@@ -102,7 +117,7 @@ window.viewDatabase = function () {
 
             for (const key in data) {
                 const entry = data[key];
-                if (entry.dummy) continue;
+                if (entry.PrivacyStatus) continue;
                 const p = document.createElement("p");
                 p.textContent = `Value: ${entry.value}, Timestamp: ${new Date(entry.timestamp).toLocaleString()}`;
                 p.style.color = "black";
@@ -171,7 +186,8 @@ window.addCategory = function (section) {
 };
 
 window.createDatabase = async function () {
-    const input = document.getElementById("databaseName")
+    const input = document.getElementById("databaseName");
+    const privacyToggle = document.getElementById("privacy");
     const text = input.value;
     if (text === "") {
         alert("Please provide a database name!");
@@ -189,8 +205,9 @@ window.createDatabase = async function () {
                 if (defaultValue) data[category] = defaultValue;
                 else data[category] = "temp" + category;
             }
-            if (categories == []) data[dummy] = "dummy";
-
+            if (privacyToggle.checked == true) data["PrivacyStatus"] = "public";
+            else data["PrivacyStatus"] = "private";
+            
             push(currRef, data)
                 .then(() => { alert("Created new database " + text + "!"); })
                 .catch((error) => { console.error(error); });
@@ -206,6 +223,7 @@ window.deleteDatabase = function () {
     const dbRef = ref(db, selectedRefName);
     remove(dbRef)
         .then(() => {
+            alert("Database deleted:", selectedRefName);
             console.log("Database deleted:", selectedRefName);
         })
         .catch(err => {
