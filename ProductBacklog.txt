@@ -1,23 +1,39 @@
-================ UserStory 007 - Privacy Attribute to db's ================
+==================================================================================================
+================ UserStory 007 - Privacy Attribute to db's =======================================
 Instead of dummy, have privacy on ALL databases
 Restricts which databases you can select (private db's won't be shown in the list of 
 databases in the select drop down)
 
-================ UserStory 009 - Modify database ================
-On the same section as Delete
-Can add new categories, or remove categories of all items in the database
 
+==================================================================================================
+================ UserStory 007.1 - Design Each Database ==========================================
+Dummy entry:
+- PrivacyStatus: (private/public)
+- Categories (same as the rest of the database)
+
+This entry will be the template for new entries in the same database.
+
+
+================================================================================================================================
 ================ UserStory 010 - Add to database: Categories automatically follow the template of your database ================
 It will tell you what types of inputs to add based on the categories specified for a database.
 CONSTRAINT: The categories of a database are constant (all elements share the same categories). They can be modified, 
 but the whole database must be modified.
 
+=================================================================================================================
+================ UserStory 011 - Multiple item add via list input box ===========================================
+Allow input to be entered in some structured form that will quickly add multiple items to a selected
+database.
+Ex: {(Name: Pikachu, Type1: Electric, Type2: None), (Name: Bulbasaur, Type1: Grass, Type2: Poison)}
 
-================ UserStory 005.1 - Allow images as a value ================
+
+=========================================================================================
+================ UserStory 005.1 - Allow images as a value ==============================
 See if firebase supports adding files and see how much is allowed.
 
-==================================================================================
-================================ IMPLEMENT LATER: ================================
+
+================================================================================================================
+================================ IMPLEMENT LATER: ==============================================================
 
 ================ UserStory 002 - select db ================     DONE except IMPLEMENT LATER
 IMPLEMENT LATER
