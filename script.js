@@ -109,7 +109,10 @@ async function refExists(refName) {
     return false;
 }
 
-window.viewDatabase = function () {
+window.viewDatabase = async function () {
+    let [temp_cats, _] = await getTemplate();
+    if (!temp_cats || temp_cats.length === 0) temp_cats = ["value", "timestamp"];
+
     // Updates display of viewed database
     if (selectedRef && refExists(selectedRef)) {
         onValue(selectedRef, (snapshot) => {
@@ -121,7 +124,17 @@ window.viewDatabase = function () {
                 const entry = data[key];
                 if (entry.PrivacyStatus) continue;
                 const p = document.createElement("p");
-                p.textContent = `Value: ${entry.value}, Timestamp: ${new Date(entry.timestamp).toLocaleString()}`;
+                p.textContent = "";
+                p.style.color = "black";
+                for (const c of temp_cats) {
+                    p.textContent += c + ": " + entry[c] + ", ";
+                }
+                p.textContent = p.textContent.substring(0, p.textContent.length - 2);
+                entriesDiv.appendChild(p);
+            }
+            if (entriesDiv.innerHTML == "") {
+                const p = document.createElement("p");
+                p.textContent = "No Data!";
                 p.style.color = "black";
                 entriesDiv.appendChild(p);
             }
