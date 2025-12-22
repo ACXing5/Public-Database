@@ -58,7 +58,7 @@ window.getDatabaseList = function () {
                 }
             });
         }
-        if (options.length == 0) options.push("No databases");
+        if (options.length === 0) options.push("No databases");
 
         options.sort((a, b) => a.localeCompare(b));
         options.unshift(select_db_text);    // Default text for select drop-down
@@ -77,9 +77,11 @@ window.getDatabaseList = function () {
             const selectedValue = event.target.value;
             if (selectedValue != select_db_text) {
                 console.log("Selected:", selectedValue);
+                
                 selectedRefName = selectedValue;
                 updateRef();
                 viewDatabase(); // Refresh database element list if on that section.
+                showSection(currSectionName);
             }
             
         });
@@ -88,7 +90,7 @@ window.getDatabaseList = function () {
 }
 
 function updateRef() {
-    if(selectedRefName == "") return false;
+    if(selectedRefName === "") return false;
     try {
         selectedRef = ref(db, selectedRefName);
     } catch (err) {
@@ -127,14 +129,12 @@ window.viewDatabase = function () {
     }
 }
 
-window.buildCategoryInputs = function () {
-    const container = document.getElementById("categoryInputs");
-    container.innerHTML = "";
+window.getTemplate = async function() {
+    let template_categories = [];
+    let template_defaults = [];
 
-    if (!selectedRefName) return;
-
-    // Get first entry of selected database
-    onValue(ref(db, selectedRefName), (snapshot) => {
+    const snapshot = await get(ref(db, selectedRefName));
+    if (snapshot.exists()) {
         let firstEntry = null;
 
         snapshot.forEach((entrySnapshot) => {
@@ -142,20 +142,39 @@ window.buildCategoryInputs = function () {
             return true; // ⛔ only first entry
         });
 
-        if (!firstEntry) return;
+        if (!firstEntry) return [];
 
         for (const key in firstEntry) {
             if (key === "PrivacyStatus") continue;
 
-            const input = document.createElement("input");
-            input.type = "text";
-            input.placeholder = key;
-            input.dataset.category = key;
-
-            container.appendChild(input);
+            template_categories.push(key);
+            if (firstEntry[key] === ("temp" + key)) template_defaults.push("");
+            else template_defaults.push(firstEntry[key]);
         }
-    }, { onlyOnce: true });
-};
+    }
+
+    return [template_categories, template_defaults];
+}
+
+window.buildCategoryInputs = async function () {
+    const container = document.getElementById("categoryInputs");
+    container.innerHTML = "";
+
+    if (!selectedRefName) return;
+
+    // Get first entry of selected database
+    let [temp_cats, temp_defs] = await getTemplate();
+    if (!temp_cats || temp_cats.length === 0) temp_cats = ["value", "timestamp"];
+    
+    for (let i = 0; i < temp_cats.length; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = temp_cats[i];
+        input.value = temp_defs[i] || "";
+        input.dataset.category = temp_cats[i];
+        container.appendChild(input);
+    }
+}
 
 // Pass in attributes (e.g. value, timestamp) as parameters
 window.writeInput = function () {
@@ -166,8 +185,6 @@ window.writeInput = function () {
         inputs.forEach(input => {
             data[input.dataset.category] = input.value;
         });
-
-        data.timestamp = Date.now();
 
         push(ref(db, selectedRefName), data);
         alert("Saved to Database!");
@@ -183,10 +200,10 @@ let createDatabasePlaceholder = "Enter database name";
 
 window.addCategory = function (section) {
     let categorySection, defaultSection;
-    if(section == "createSection") {
+    if(section === "createSection") {
         categorySection = "categoryNameCreate";
         defaultSection = "categoryDefaultValueCreate";
-    } else if (section == "modifySection") {
+    } else if (section === "modifySection") {
         categorySection = "categoryNameModify";
         defaultSection = "categoryDefaultValueModify";
     } else {
@@ -201,7 +218,7 @@ window.addCategory = function (section) {
        alert("Category already added! Please supply a new one.");
     } else if (category != "") {
         console.log(category + ": " + defaultValue);
-        if(defaultValue == "") {
+        if(defaultValue === "") {
             window.categories.push(category);
         } else {
             window.categories.push(category + ":" + defaultValue);
@@ -238,7 +255,7 @@ window.createDatabase = async function () {
                 if (defaultValue) data[category] = defaultValue;
                 else data[category] = "temp" + category;
             }
-            if (privacyToggle.checked == true) data["PrivacyStatus"] = "public";
+            if (privacyToggle.checked === true) data["PrivacyStatus"] = "public";
             else data["PrivacyStatus"] = "private";
             
             push(currRef, data)
@@ -291,9 +308,9 @@ window.modifyCategories = async function () {
 
 function renderCategories(categories, section) {
     let containerName;
-    if(section == "createSection") {
+    if(section === "createSection") {
         containerName = "categoryContainerCreate";
-    } else if (section == "modifySection") {
+    } else if (section === "modifySection") {
         containerName = "categoryContainerModify";
     } else {
         return;
@@ -318,7 +335,7 @@ function renderCategories(categories, section) {
 
 function removeCategory(categories, section, category) {
     for (const c of categories) {
-        if (c == category) {
+        if (c === category) {
             categories.pop(c);
         }
     }
@@ -327,15 +344,17 @@ function removeCategory(categories, section, category) {
 
 // Update whenever new section added
 const sections = ["homeSection", "addSection", "viewSection", "createSection", "modifySection"];
+let currSectionName = "homeSection";
 
 window.showSection = function (sectionName) {
+    currSectionName = sectionName;
     for (const section of sections) {
         document.getElementById(section).style.display = "none";
     }
     document.getElementById(sectionName).style.display = "block";
-    if (sectionName == "viewSection") {
+    if (sectionName === "viewSection") {
         viewDatabase();
-    } else if (sectionName == "addSection") {
+    } else if (sectionName === "addSection") {
         buildCategoryInputs();
     }
 
