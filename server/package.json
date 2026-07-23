@@ -2,9 +2,12 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ACXing5.github.io/Public-Database/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out",
     "start": "next start",
     "lint": "npm run lint:next && npm:lint:prettier",
     "lint:next": "next lint",
@@ -35,6 +38,7 @@
     "eslint": "^8.57.1",
     "eslint-config-next": "15.1.6",
     "eslint-config-prettier": "^9.1.0",
+    "gh-pages": "^6.1.1",
     "prettier": "^3.5.3"
   }
 }
