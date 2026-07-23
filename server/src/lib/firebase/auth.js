@@ -22,6 +22,7 @@ export async function signInWithGoogle() {
     await signInWithPopup(auth, provider);
   } catch (error) {
     console.error("Error signing in with Google", error);
+    alert("Sign in error: " + error.message);
   }
 }
 

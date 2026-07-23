@@ -17,7 +17,16 @@ export async function getAuthenticatedAppForUser() {
   // other affordances for use in server environments.
   const firebaseServerApp = initializeServerApp(
     // https://github.com/firebase/firebase-js-sdk/issues/8863#issuecomment-2751401913
-    initializeApp(),
+    initializeApp({
+      apiKey: "AIzaSyCzkjDA6XQFgLfdVtHtRMyLOjubwi0e37g",
+      authDomain: "public-database-2.firebaseapp.com",
+      databaseURL: "https://public-database-2-default-rtdb.firebaseio.com",
+      projectId: "public-database-2",
+      storageBucket: "public-database-2.firebasestorage.app",
+      messagingSenderId: "1063065957137",
+      appId: "1:1063065957137:web:f37150cd8e334d1a9dd2b0",
+      measurementId: "G-E4JS903ZLN"
+    }),
     {
       authIdToken,
     }
